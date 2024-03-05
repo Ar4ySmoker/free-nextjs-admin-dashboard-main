@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Generate the Prisma Client in JavaScript
+generator client {
+  provider = "prisma-client-js"
+}
+
+// This block of code defines the database connection. The database is a PostgreSQL database. 
+// The database connection URL will be read from an environment variable named `DATABASE_URL`.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// This block of code defines a Post model
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean  @default(false)
+  title     String   @db.VarChar(255)
+  partner   Partner? @relation(fields: [partnerName], references: [nameCompany])
+  content   String   
+  author    Manager?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+  partnerName String?
+}
+model Partner{
+   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  nameCompany String @unique
+  name      String?  
+  updatedAt DateTime @updatedAt
+  role      Role     @default(USER)
+  manager Manager? @relation(fields: [managerId], references: [id])
+  managerId Int?
+  posts Post[]
+}
+
+model Manager{
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  updatedAt DateTime @updatedAt
+  role      Role     @default(USER)
+  partners Partner[]
+}
+model Profession{
+   id        Int      @id @default(autoincrement())
+  name      String?
+  
+}
+model Document{
+   id        Int      @id @default(autoincrement())
+  name      String?
+  date      String?
+}
+
+model Other{
+   id        Int      @id @default(autoincrement())
+  name      String?
+}
+model Location{
+    id        Int      @id @default(autoincrement()) @unique
+  name      String?
+  candidates Candidate[] 
+ 
+
+}
+model Candidate{
+  id        Int      @id @default(autoincrement()) @unique
+  name      String?
+  locations Location[] 
+  
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  
+}
+
+
+
+
+// model GermanyFirma{
+//  id        Int      @id @default(autoincrement()) 
+//  createdAt DateTime @default(now())
+//  email     String   @unique
+//  name      String?
+//  updatedAt DateTime @updatedAt
+//  manager   Manager? @relation(fields: [managerId], references: [id])
+// }
+
+enum Role {
+  USER
+  ADMIN
+}
