@@ -15,83 +15,81 @@ datasource db {
 
 // This block of code defines a Post model
 model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  title     String   @db.VarChar(255)
-  partner   Partner? @relation(fields: [partnerName], references: [nameCompany])
-  content   String   
-  author    Manager?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  published   Boolean  @default(false)
+  title       String   @db.VarChar(255)
+  partner     Partner? @relation(fields: [partnerName], references: [nameCompany])
+  content     String
+  author      Manager? @relation(fields: [authorId], references: [id])
+  authorId    Int?
   partnerName String?
 }
-model Partner{
-   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  nameCompany String @unique
-  name      String?  
-  updatedAt DateTime @updatedAt
-  role      Role     @default(USER)
-  manager Manager? @relation(fields: [managerId], references: [id])
-  managerId Int?
-  posts Post[]
+
+model Partner {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  email       String   @unique
+  nameCompany String   @unique
+  name        String?
+  updatedAt   DateTime @updatedAt
+  role        Role     @default(USER)
+  manager     Manager? @relation(fields: [managerId], references: [id])
+  managerId   Int?
+  posts       Post[]
 }
 
-model Manager{
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
+model Manager {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  email     String    @unique
   name      String?
   posts     Post[]
-  updatedAt DateTime @updatedAt
-  role      Role     @default(USER)
-  partners Partner[]
-}
-model Profession{
-   id        Int      @id @default(autoincrement())
-  name      String?
-  
-}
-model Document{
-   id        Int      @id @default(autoincrement())
-  name      String?
-  date      String?
+  updatedAt DateTime  @updatedAt
+  role      Role      @default(USER)
+  partners  Partner[]
 }
 
-model Other{
-   id        Int      @id @default(autoincrement())
-  name      String?
+model Profession {
+  id   Int     @id @default(autoincrement())
+  name String?
+
 }
-model Location{
-    id        Int      @id @default(autoincrement()) @unique
-  name      String?
-  candidates Candidate[] 
+
+model Document {
+  id   Int     @id @default(autoincrement())
+  name String?
+  date String?
+
+}
+
+model Other {
+  id   Int     @id @default(autoincrement())
+  name String?
+}
+
+model Location {
+  id         Int         @id @default(autoincrement())
+  name       String?
+  
+createdAt DateTime @default(now())
+ updatedAt DateTime @default(now())
+  
+   
+}
+
+model Candidate {
+  id          String @id @default(cuid())
+  name        String
+  email String
+  phone String
+     
+ createdAt DateTime @default(now())
+ updatedAt DateTime @default(now())
  
-
-}
-model Candidate{
-  id        Int      @id @default(autoincrement()) @unique
-  name      String?
-  locations Location[] 
-  
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  
 }
 
-
-
-
-// model GermanyFirma{
-//  id        Int      @id @default(autoincrement()) 
-//  createdAt DateTime @default(now())
-//  email     String   @unique
-//  name      String?
-//  updatedAt DateTime @updatedAt
-//  manager   Manager? @relation(fields: [managerId], references: [id])
-// }
 
 enum Role {
   USER

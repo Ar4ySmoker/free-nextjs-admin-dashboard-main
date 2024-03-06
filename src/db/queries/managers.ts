@@ -1,5 +1,5 @@
 import type { Manager } from "@prisma/client";
-import { prisma } from "@/db";
+import { prisma } from "@/db/prisma";
 import { notFound } from "next/navigation";
 
 export async function fetchManagers(): Promise<Manager[]> {

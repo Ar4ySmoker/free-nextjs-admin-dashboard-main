@@ -1,7 +1,7 @@
 // src/db/queries/posts.ts
 
 import type { Post } from "@prisma/client";
-import { prisma } from "@/db";
+import { prisma } from "@/db/prisma";
 import { notFound } from "next/navigation";
 
 export async function fetchPosts(): Promise<Post[]> {

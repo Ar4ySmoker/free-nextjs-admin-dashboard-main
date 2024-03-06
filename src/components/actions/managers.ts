@@ -1,7 +1,7 @@
 
 "use server";
 
-import { prisma } from "@/db";
+import { prisma } from "@/db/prisma";
 import type { Manager } from "@prisma/client";
 
 import { revalidatePath } from "next/cache";
