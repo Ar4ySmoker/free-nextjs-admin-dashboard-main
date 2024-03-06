@@ -1,10 +1,11 @@
-import { getData } from "@/db/queries/candidate";
+import { getCandidatelist } from "@/db/queries/candidate";
+import Link from "next/link";
 // import Image from "next/image";
 
 const ServerTableOne = async ({
   query,
 }: { query: string }) => {
-  const candidates = await getData(query);
+  const candidates = await getCandidatelist(query);
 
   if (candidates) {
     return (
@@ -61,7 +62,7 @@ const ServerTableOne = async ({
                   </p>
                 </div>
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-black dark:text-white">{rs.locations.length}</p>
+                  <p className="text-black dark:text-white">{rs.email}</p>
                 </div>
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
                   <p className="text-black dark:text-white">
@@ -79,11 +80,11 @@ const ServerTableOne = async ({
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
                   <div className="mb-5">
-                    <input
-                      type="submit"
-                      value="Sign In"
+                    <Link
+                      href={`/candidate/edit/${rs.id}`}
                       className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                    />
+                    >Edit
+                    </Link>
                   </div>
                 </div>
               </div>
