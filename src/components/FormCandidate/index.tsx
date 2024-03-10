@@ -153,18 +153,9 @@ const FormCandidate = () => {
             </div>
             <div className="flex flex-col gap-5.5 p-6.5">
 
+              <Dropdown title={"Специальность"} placeholder={"Выберите специальность"} callback={getProfessionlist} />
               <MultiSelect id="multiSelect" />
-              <div>
-                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                  Фамилия
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ваша фамилия"
-                  id="lastname"
-                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                />
-              </div>
+
               <div>
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Номер телефона
