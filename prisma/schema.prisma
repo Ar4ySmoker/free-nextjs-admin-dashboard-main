@@ -6,25 +6,42 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// This block of code defines the database connection. The database is a PostgreSQL database. 
+// This block of code defines the database connection. The database is a VacanciesgreSQL database. 
 // The database connection URL will be read from an environment variable named `DATABASE_URL`.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// This block of code defines a Post model
-model Post {
-  id          Int      @id @default(autoincrement())
+// This block of code defines a postgresql model
+model Vacancies {
+  id          String      @id @default(cuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   published   Boolean  @default(false)
   title       String   @db.VarChar(255)
+  profession Profession[]
+  price String
+  homePrice String
+  transport String
+  location Location[]
   partner     Partner? @relation(fields: [partnerName], references: [nameCompany])
+  partnerName String?
   content     String
   author      Manager? @relation(fields: [authorId], references: [id])
-  authorId    Int?
-  partnerName String?
+  authorId    String?
+  candidates Candidate[]
+  vacanciesImage String?
+}
+
+model Post{
+  id String @id @default(cuid())
+   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author      Manager?  @relation(fields: [authorId], references: [id])
+  authorId    String?
+  title String
+  body String
 }
 
 model Partner {
@@ -33,50 +50,60 @@ model Partner {
   email       String   @unique
   nameCompany String   @unique
   name        String?
+  phone       String?
+  documents Document[]
+  location Location[]
+  professions Profession[]
   updatedAt   DateTime @updatedAt
   role        Role     @default(USER)
   manager     Manager? @relation(fields: [managerId], references: [id])
-  managerId   Int?
-  posts       Post[]
+  managerId   String?
+  vacanciess       Vacancies[]
+  partnerImage String?
 }
 
 model Manager {
-  id        Int       @id @default(autoincrement())
+  id        String       @id @default(cuid())
   createdAt DateTime  @default(now())
   email     String    @unique
   name      String?
-  posts     Post[]
+  vacanciess     Vacancies[]
   updatedAt DateTime  @updatedAt
   role      Role      @default(USER)
   partners  Partner[]
-}
-
-model Profession {
-  id   Int     @id @default(autoincrement())
-  name String?
-
+  candidates Candidate[]
+  managerImage String?
+  posts Post[]
 }
 
 model Document {
-  id   Int     @id @default(autoincrement())
+  id   String     @id @default(cuid())
   name String?
   date String?
-
+  candidate Candidate[]
+  partner Partner[]
+  documentImage String?
+  documentFile String?
 }
 
-model Other {
-  id   Int     @id @default(autoincrement())
-  name String?
+model Profession {
+  id   String     @id @default(cuid()) 
+  name String
+  description String
+  candidate Candidate[]
+  needCandidate Int
+  partners Partner[]
+  countPartners Int
+  vacanciess Vacancies[]
 }
-
 model Location {
-  id         Int         @id @default(autoincrement())
+  id         String  @id @default(cuid())
   name       String?
-  
-createdAt DateTime @default(now())
- updatedAt DateTime @default(now())
-  
-   
+  candidate Candidate[]
+  vacanciess Vacancies[] 
+  partners Partner[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Candidate {
@@ -84,9 +111,16 @@ model Candidate {
   name        String
   email String
   phone String
-     
- createdAt DateTime @default(now())
- updatedAt DateTime @default(now())
+  vacancies Vacancies? @relation(fields: [vacanciesId],references: [id])
+  vacanciesId String?
+  manager Manager? @relation(fields: [managerId],references: [id])
+  managerId String?
+  location Location []
+  locationId String?
+  profession Profession[]
+  documents Document []
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
  
 }
 

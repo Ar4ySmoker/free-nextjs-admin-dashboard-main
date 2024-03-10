@@ -1,5 +1,6 @@
 import { getCandidatelist } from "@/db/queries/candidate";
 import Link from "next/link";
+import { DeleteButton } from "../Delete/DeleteCandidate";
 // import Image from "next/image";
 
 const ServerTableOne = async ({
@@ -10,12 +11,20 @@ const ServerTableOne = async ({
   if (candidates) {
     return (
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="flex justify-between">
         <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
           Топ работников
         </h4>
-
+          <Link
+            href="/candidate/create"
+            className=" cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
+          >
+            Create
+          </Link>
+        </div>
         <div className="flex flex-col">
           <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
+
             <div className="p-2.5 xl:p-5">
               <h5 className="text-sm font-medium uppercase xsm:text-base">
                 Имя
@@ -79,12 +88,13 @@ const ServerTableOne = async ({
                 </div>
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-                  <div className="mb-5">
+                  <div className="mb-5 flex gap-2">
                     <Link
                       href={`/candidate/edit/${rs.id}`}
-                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
                     >Edit
                     </Link>
+                    <DeleteButton id={rs.id} />
                   </div>
                 </div>
               </div>

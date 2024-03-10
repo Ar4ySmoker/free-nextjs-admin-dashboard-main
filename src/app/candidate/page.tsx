@@ -1,16 +1,17 @@
 //app/employee/page.tsx
 import Link from "next/link";
-import { getCandidatelist } from "@/db/queries/candidate";
+import { getLocationlist } from "@/db/queries/location";
 import { formatDate } from "@/db/utils";
 import { DeleteButton } from "@/components/Delete/DeleteCandidate";
 
 //const Employee = async () => {
-const Candidate = async ({
+const Location = async ({
     query
 }: {
     query: string;
 }) => {
-    const candidates = await getCandidatelist(query);
+    const locations = await getLocationlist(query);
+    if (locations) {
     return (
         <div className="w-screen py-20 flex justify-center flex-col items-center">
             <div className="flex items-center justify-between gap-1 mb-5">
@@ -36,15 +37,15 @@ const Candidate = async ({
                         </tr>
                     </thead>
                     <tbody>
-                        {candidates.map((rs, index) => (
+                        {locations.map((rs, index) => (
                             <tr key={rs.id} className="bg-white border-b">
-                                <td className="py-3 px-6">{index + 1}</td>
+                                {/* <td className="py-3 px-6">{index + 1}</td> */}
                                 <td className="py-3 px-6">{rs.name}</td>
-                                <td className="py-3 px-6">{rs.email}</td>
-                                <td className="py-3 px-6">{rs.phone}</td>
-                                <td className="py-3 px-6">
+                                {/* <td className="py-3 px-6">{rs.email}</td>
+                                <td className="py-3 px-6">{rs.phone}</td> */}
+                                {/* <td className="py-3 px-6">
                                     {formatDate(rs.createdAt.toString())}
-                                </td>
+                                </td> */}
                                 <td className="flex justify-center gap-1 py-3">
                                     <Link
                                         href={`/candidate/edit/${rs.id}`}
@@ -61,6 +62,10 @@ const Candidate = async ({
             </div>
         </div>
     );
-};
-
-export default Candidate;
+    } else {
+        return (
+            console.log("error")
+        )
+    }
+}
+export default Location;

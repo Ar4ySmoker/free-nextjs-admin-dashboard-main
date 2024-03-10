@@ -5,10 +5,12 @@ import { prisma } from "@/db/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+
 const CandidateSchema = z.object({
   name: z.string().min(6),
   email: z.string().min(6),
   phone: z.string().min(11),
+  location: z.string().min(1),
 });
 
 export const saveCandidate = async (prevSate: any, formData: FormData) => {
@@ -28,14 +30,20 @@ export const saveCandidate = async (prevSate: any, formData: FormData) => {
         name: validatedFields.data.name,
         email: validatedFields.data.email,
         phone: validatedFields.data.phone,
+
+        location: {
+          create: {
+            name: "Город",
+          },
+        },
       },
     });
   } catch (error) {
     return { message: "Failed to create new Candidate" };
   }
 
-  revalidatePath("/candidate");
-  redirect("/candidate");
+  revalidatePath("/tables");
+  redirect("/tables");
 };
 
 export const getCandidatelist = async (query: string) => {
@@ -47,6 +55,7 @@ export const getCandidatelist = async (query: string) => {
         email: true,
         phone: true,
         createdAt: true,
+        location: { select: { name: true } },
       },
       orderBy: {
         createdAt: "desc",
@@ -97,8 +106,8 @@ export const updateCandidate = async (
     return { message: "Failed to update candidate" };
   }
 
-  revalidatePath("/candidate");
-  redirect("/candidate");
+  revalidatePath("/tables");
+  redirect("/tables");
 };
 
 export const deleteCandidate = async (id: string) => {
@@ -110,5 +119,5 @@ export const deleteCandidate = async (id: string) => {
     return { message: "Failed to delete candidate" };
   }
 
-  revalidatePath("/candidate");
+  revalidatePath("/tables");
 };

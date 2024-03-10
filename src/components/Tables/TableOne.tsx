@@ -1,62 +1,112 @@
-'use client'
+'use server'
 
-import { BRAND } from "@/types/brand";
+import { getCandidatelist } from "@/db/queries/candidate";
+import Link from "next/link";
+import { DeleteButton } from "../Delete/DeleteCandidate";
 // import Image from "next/image";
-interface TableOneProps {
-  children: React.ReactNode;
-  // Add other props as needed
-}
 
-const brandData: BRAND[] = [
-  {
-    logo: "/images/brand/brand-01.svg",
-    name: "Google",
-    visitors: 3.5,
-    revenues: "5,768",
-    sales: 590,
-    conversion: 4.8,
-  },
-  {
-    logo: "/images/brand/brand-02.svg",
-    name: "Twitter",
-    visitors: 2.2,
-    revenues: "4,635",
-    sales: 467,
-    conversion: 4.3,
-  },
-  {
-    logo: "/images/brand/brand-03.svg",
-    name: "Github",
-    visitors: 2.1,
-    revenues: "4,290",
-    sales: 420,
-    conversion: 3.7,
-  },
-  {
-    logo: "/images/brand/brand-04.svg",
-    name: "Vimeo",
-    visitors: 1.5,
-    revenues: "3,580",
-    sales: 389,
-    conversion: 2.5,
-  },
-  {
-    logo: "/images/brand/brand-05.svg",
-    name: "Facebook",
-    visitors: 3.5,
-    revenues: "6,768",
-    sales: 390,
-    conversion: 4.2,
-  },
-];
+const ServerTableOne = async ({
+  query,
+}: { query: string }) => {
+  const candidates = await getCandidatelist(query);
 
+  if (candidates) {
+    return (
+      <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="flex justify-between">
+          <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+            Топ работников
+          </h4>
+          <Link
+            href="/candidate/create"
+            className=" cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
+          >
+            Create
+          </Link>
+        </div>
+        <div className="flex flex-col">
+          <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
 
+            <div className="p-2.5 xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Имя
+              </h5>
+            </div>
+            <div className="p-2.5 xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Профессия
+              </h5>
+            </div>
+            <div className="p-2.5 text-center xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Национальность
+              </h5>
+            </div>
+            <div className="p-2.5 text-center xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Документы
+              </h5>
+            </div>
+            <div className="hidden p-2.5 text-center sm:block xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Местоположение
+              </h5>
+            </div>
+            <div className="hidden p-2.5 text-center sm:block xl:p-5">
+              <h5 className="text-sm font-medium uppercase xsm:text-base">
+                Действия
+              </h5>
+            </div>
+          </div>
+          <div>
+            {candidates.map((rs, index) => (
+              <div
+                className={`grid grid-cols-3 sm:grid-cols-6 `}
+                key={rs.id}
+              >
+                <div className="flex items-center gap-3 p-2.5 xl:p-5">
+                  <div className="flex-shrink-0">
+                    {/* <Image src={} alt="Brand" width={48} height={48} /> */}
+                  </div>
+                  <p className="hidden text-black dark:text-white sm:block">
+                    {rs.name}
+                  </p>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                  <p className="text-black dark:text-white">{rs.email}</p>
+                </div>
+                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                  <p className="text-black dark:text-white">
+                    {rs.name}
+                  </p>
+                </div>
 
-const TableOne: React.FC<TableOneProps> = ({ children }) => {
-   
-  return (
-    <div>{children}</div>
-  );
+                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                  <p className="text-meta-3"> {rs.name}</p>
+                </div>
+
+                <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                  <p className="text-black dark:text-white">{rs.location[0].name}</p>
+                </div>
+
+                <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+                  <div className="mb-5 flex gap-2">
+                    <Link
+                      href={`/candidate/edit/${rs.id}`}
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
+                    >Edit
+                    </Link>
+                    <DeleteButton id={rs.id} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 };
 
-export default TableOne;
+export default ServerTableOne;

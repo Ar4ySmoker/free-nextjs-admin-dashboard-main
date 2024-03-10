@@ -1,5 +1,5 @@
 import React from "react";
-import FormElements from "@/components/FormElements";
+import FormCandidate from "@/components/FormCandidate";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const FormElementsPage = () => {
   return (
     <DefaultLayout>
-      <FormElements />
+      <FormCandidate />
     </DefaultLayout>
   );
 };

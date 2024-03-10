@@ -3,9 +3,12 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import SelectGroupOne from "@/components/SelectGroup/SelectGroupOne";
+import SelectGroupOne from "@/components/SelectGroup/SelectProfessionPrimary";
 import Link from "next/link";
 import { useFormState } from "react-dom"
+import Dropdown from "@/components/SelectGroup/RefactorProfessionPrimary";
+import { useEffect, useState } from "react";
+import { getProfessionlist } from "@/db/queries/professions";
 
 // export const metadata: Metadata = {
 //   title: "Next.js Form Layout | TailAdmin - Next.js Dashboard Template",
@@ -13,27 +16,22 @@ import { useFormState } from "react-dom"
 //     "This is Next.js Form Layout page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
 // };
 
-interface FormErrors {
-  name?: string[],
-  location?: string[],
-}
+const FormLayout = () => {
+  const [profession, setProfessions] = useState<any>();
 
-interface FormState {
-  errors: FormErrors,
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const professionsData = await getProfessionlist("").then(json => setProfessions(json));
+        // setProfessions(professionsData);
+      } catch (error) {
+        console.error("Ошибка при загрузке списка:", error);
+      }
+    };
 
-interface PostFormProps {
-  formAction: any,
-  initialData: {
-    name: string,
-    location: string,
-  },
-}
-
-const FormLayout = ({ formAction, initialData }: PostFormProps) => {
-  const [formState, action] = useFormState<FormState>(formAction, {
-    errors: {},
-  })
+    fetchData();
+  }, []);
+  console.log(profession)
   return (
     <DefaultLayout>
       <Breadcrumb pageName="FormLayout" />
@@ -47,7 +45,7 @@ const FormLayout = ({ formAction, initialData }: PostFormProps) => {
                 Contact Form
               </h3>
             </div>
-            <form action={action}>
+            <form action={"$"}>
               <div className="p-6.5">
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
@@ -55,7 +53,7 @@ const FormLayout = ({ formAction, initialData }: PostFormProps) => {
                       First name
                     </label>
                     <input
-                      type="text" id="name" name="name" defaultValue={initialData.name}
+                      type="text" id="name" name="name" defaultValue={""}
                       placeholder="Enter your first name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -66,7 +64,7 @@ const FormLayout = ({ formAction, initialData }: PostFormProps) => {
                       Last name
                     </label>
                     <input
-                      type="text" id="title" name="title" defaultValue={initialData.location}
+                      type="text" id="title" name="title" defaultValue={"@"}
                       placeholder="Enter your last name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -96,6 +94,7 @@ const FormLayout = ({ formAction, initialData }: PostFormProps) => {
                 </div>
 
                 <SelectGroupOne />
+                <Dropdown title={"Test"} placeholder={"Test"} callback={getProfessionlist} />
 
                 <div className="mb-6">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
