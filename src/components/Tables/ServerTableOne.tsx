@@ -1,4 +1,4 @@
-import { fetchPosts } from "@/db/queries/posts"
+// import { fetchPosts } from "@/db/queries/location"
 // import Image from "next/image";
 
 const ServerTableOne = async () => {
