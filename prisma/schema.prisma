@@ -1,35 +1,28 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Generate the Prisma Client in JavaScript
 generator client {
   provider = "prisma-client-js"
 }
 
-// This block of code defines the database connection. The database is a PostgreSQL database. 
-// The database connection URL will be read from an environment variable named DATABASE_URL.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// This block of code defines a Post model
 model Post {
   id          String      @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  published   Boolean  @default(false)
-  title       String   @db.VarChar(255)
-  price String
-  homePrice String
-  transport String
-  location Location[]
-  partner     Partner? @relation(fields: [partnerName], references: [nameCompany])
-  content     String
-  author      Manager? @relation(fields: [authorId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  title       String      @db.VarChar(255)
   authorId    String?
+  content     String
+  homePrice   String
   partnerName String?
-  candidates Candidate[]
+  price       String
+  published   Boolean     @default(false)
+  transport   String
+  candidates  Candidate[]
+  author      Manager?    @relation(fields: [authorId], references: [id])
+  partner     Partner?    @relation(fields: [partnerName], references: [nameCompany])
+  location    Location[]  @relation("LocationToPost")
 }
 
 model Partner {
@@ -40,71 +33,68 @@ model Partner {
   name        String?
   updatedAt   DateTime @updatedAt
   role        Role     @default(USER)
-  manager     Manager? @relation(fields: [managerId], references: [id])
   managerId   String?
+  manager     Manager? @relation(fields: [managerId], references: [id])
   posts       Post[]
 }
 
 model Manager {
-  id        String       @id @default(cuid())
-  createdAt DateTime  @default(now())
-  email     String    @unique
-  name      String?
-  posts     Post[]
-  updatedAt DateTime  @updatedAt
-  role      Role      @default(USER)
-  partners  Partner[]
+  id         String      @id @default(cuid())
+  createdAt  DateTime    @default(now())
+  email      String      @unique
+  name       String?
+  updatedAt  DateTime    @updatedAt
+  role       Role        @default(USER)
   candidates Candidate[]
+  partners   Partner[]
+  posts      Post[]
 }
-
-
-
-
 
 model Other {
-  id   String     @id @default(cuid())
+  id   String  @id @default(cuid())
   name String?
 }
+
 model Document {
-  id   String     @id @default(cuid())
-  name String?
-  date String?
+  id        String      @id @default(cuid())
+  name      String?
+  date      String?
   candidate Candidate[]
 }
+
 model Profession {
-  id   String     @id @default(cuid()) 
-  name String
+  id        String      @id @default(cuid())
+  name      String
   candidate Candidate[]
 }
+
 model Location {
-  id         String  @id @default(cuid())
-  name       String?
+  id        String      @id @default(cuid())
+  name      String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now())
   candidate Candidate[]
-  posts Post[] 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  posts     Post[]      @relation("LocationToPost")
 }
 
 model Candidate {
-  id          String @id @default(cuid())
-  name        String
-  email String
-  phone String
-  post Post @relation(fields: [postId],references: [id])
-  postId String
-  manager Manager @relation(fields: [managerId],references: [id])
-  managerId String
-  location Location @relation(fields: [locationId], references: [id])
-  locationId String   
-  profession Profession @relation(fields: [professionId],references: [id])
+  id           String     @id @default(cuid())
+  name         String
+  updatedAt    DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  email        String
+  locationId   String
+  phone        String
+  managerId    String
+  documentsId  String
+  postId       String
   professionId String
-  documents Document @relation(fields: [documentsId],references: [id])
-  documentsId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
- 
+  documents    Document   @relation(fields: [documentsId], references: [id])
+  location     Location   @relation(fields: [locationId], references: [id])
+  manager      Manager    @relation(fields: [managerId], references: [id])
+  post         Post       @relation(fields: [postId], references: [id])
+  profession   Profession @relation(fields: [professionId], references: [id])
 }
-
 
 enum Role {
   USER
