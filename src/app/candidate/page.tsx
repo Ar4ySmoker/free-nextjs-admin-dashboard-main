@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { getLocationlist } from "@/db/queries/location";
 import { formatDate } from "@/db/utils";
-import { DeleteButton } from "@/components/Delete/DeleteCandidate";
+import { DeleteButton } from "@/components/Delete/DeleteButton";
 
 //const Employee = async () => {
 const Location = async ({

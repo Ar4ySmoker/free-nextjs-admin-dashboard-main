@@ -1,16 +1,20 @@
 'use server'
 
-import { getCandidatelist } from "@/db/queries/candidate";
+import { getLocationlist } from "@/db/queries/location";
 import Link from "next/link";
-import { DeleteButton } from "../Delete/DeleteCandidate";
+import { deleteLocation } from "@/db/queries/location";
+import { DeleteButton } from "../Delete/DeleteButton";
 // import Image from "next/image";
 
-const ServerTableOne = async ({
-  query,
-}: { query: string }) => {
-  const candidates = await getCandidatelist(query);
 
-  if (candidates) {
+
+const ServerTableOne = async ({
+  query,onDeleteLocation,
+}: { query: string, onDeleteLocation: (id: string) => Promise<void> }) => {
+  const location = await getLocationlist(query);
+
+
+  if (location) {
     return (
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between">
@@ -59,7 +63,7 @@ const ServerTableOne = async ({
             </div>
           </div>
           <div>
-            {candidates.map((rs, index) => (
+            {location.map((rs, index) => (
               <div
                 className={`grid grid-cols-3 sm:grid-cols-6 `}
                 key={rs.id}
@@ -86,7 +90,7 @@ const ServerTableOne = async ({
                 </div>
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-                  <p className="text-black dark:text-white">{rs.location[0].name}</p>
+                  {/* <p className="text-black dark:text-white">{rs.location[0].name}</p> */}
                 </div>
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
@@ -96,7 +100,7 @@ const ServerTableOne = async ({
                       className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
                     >Edit
                     </Link>
-                    <DeleteButton id={rs.id} />
+                    <DeleteButton id={rs.id} onClick={() => onDeleteLocation(rs.id)} />
                   </div>
                 </div>
               </div>

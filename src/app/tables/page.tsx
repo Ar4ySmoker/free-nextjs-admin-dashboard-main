@@ -19,8 +19,8 @@ const TablesPage = () => {
       <Breadcrumb pageName="Работники" />
 
       <div className="flex flex-col gap-10">
-        <TableOne query="SELECT * FROM Candidate" />
-        <TableTwo query="SELECT * FROM Profession" />
+        <TableOne query="SELECT * FROM Location" />
+        {/* <TableTwo query="SELECT * FROM Profession" /> */}
         <TableThree />
       </div>
     </DefaultLayout>

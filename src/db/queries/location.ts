@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 const LocationShema = z.object({
-  id: z.string(),
+
   name: z.string(),
 });
 
@@ -22,7 +22,7 @@ export const saveLocation = async (prevState: any, formData: FormData) => {
   try {
     await prisma.location.create({
       data: {
-        id: validatedFields.data.id,
+        
         name: validatedFields.data.name,
       },
     });
@@ -94,4 +94,6 @@ export const deleteLocation = async (id: string) => {
   } catch (error) {
     return { message: "Failed to delete location" };
   }
+  revalidatePath("/tables");
+  redirect("/tables");
 };

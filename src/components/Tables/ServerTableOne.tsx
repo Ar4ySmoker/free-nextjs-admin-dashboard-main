@@ -1,6 +1,6 @@
 import { getCandidatelist } from "@/db/queries/candidate";
 import Link from "next/link";
-import { DeleteButton } from "../Delete/DeleteCandidate";
+import { DeleteButton } from "../Delete/DeleteButton";
 // import Image from "next/image";
 
 const ServerTableOne = async ({
