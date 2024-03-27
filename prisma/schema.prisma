@@ -81,20 +81,23 @@ model Location {
 model Candidate {
   id           String     @id @default(cuid())
   name         String
+  lastName     String?
+  dateBirt     String?
   updatedAt    DateTime   @default(now())
   createdAt    DateTime   @default(now())
-  email        String
-  locationId   String
+  email        String?
+  locationId   String?
   phone        String
-  managerId    String
-  documentsId  String
-  postId       String
-  professionId String
-  documents    Document   @relation(fields: [documentsId], references: [id])
-  location     Location   @relation(fields: [locationId], references: [id])
-  manager      Manager    @relation(fields: [managerId], references: [id])
-  post         Post       @relation(fields: [postId], references: [id])
-  profession   Profession @relation(fields: [professionId], references: [id])
+  comment      String?
+  managerId    String?
+  documentsId  String?
+  postId       String?
+  professionId String?
+  documents    Document?   @relation(fields: [documentsId], references: [id])
+  location     Location?   @relation(fields: [locationId], references: [id])
+  manager      Manager?    @relation(fields: [managerId], references: [id])
+  post         Post?       @relation(fields: [postId], references: [id])
+  profession   Profession? @relation(fields: [professionId], references: [id])
 }
 
 enum Role {

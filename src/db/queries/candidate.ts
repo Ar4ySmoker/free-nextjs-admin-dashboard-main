@@ -7,17 +7,22 @@ import { redirect } from "next/navigation";
 
 
 const CandidateSchema = z.object({
-  name: z.string().min(6),
-  email: z.string().min(6),
-  phone: z.string().min(11),
+  name: z.string(),
+  lastName: z.string(),
+  dateBirt: z.string(),
+  phone: z.string(),
+  email: z.string(),
+  profession: z.string(),
+  documents: z.string(),
   location: z.string().min(1),
+  comment: z.string()
 });
 
 export const saveCandidate = async (prevSate: any, formData: FormData) => {
   const validatedFields = CandidateSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
-
+  
   if (!validatedFields.success) {
     return {
       Error: validatedFields.error.flatten().fieldErrors,
@@ -28,20 +33,33 @@ export const saveCandidate = async (prevSate: any, formData: FormData) => {
     await prisma.candidate.create({
       data: {
         name: validatedFields.data.name,
-        email: validatedFields.data.email,
+        lastName: validatedFields.data.lastName,
+        dateBirt: validatedFields.data.dateBirt,
         phone: validatedFields.data.phone,
-
+        email: validatedFields.data.email,
+        profession:{
+        create:{
+           name:"Плиточник"
+        }
+        },
+        documents:{
+          create:{
+            name:"Пасспорт"
+          }
+        },
         location: {
           create: {
             name: "Город",
           },
         },
+        comment: validatedFields.data.comment,   
       },
     });
+    console.log("working")
   } catch (error) {
     return { message: "Failed to create new Candidate" };
   }
-
+  console.log("working")
   revalidatePath("/tables");
   redirect("/tables");
 };
@@ -52,10 +70,10 @@ export const getCandidatelist = async (query: string) => {
       select: {
         id: true,
         name: true,
+        lastName: true,
         email: true,
         phone: true,
-        createdAt: true,
-        location: { select: { name: true } },
+        location:true,
       },
       orderBy: {
         createdAt: "desc",
@@ -120,4 +138,5 @@ export const deleteCandidate = async (id: string) => {
   }
 
   revalidatePath("/tables");
+  redirect("/tables");
 };

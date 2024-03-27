@@ -1,21 +1,23 @@
 'use server'
 
-import { getLocationlist } from "@/db/queries/location";
+import { getCandidatelist } from "@/db/queries/candidate";
 import Link from "next/link";
-import { deleteLocation } from "@/db/queries/location";
+import { deleteCandidate } from "@/db/queries/candidate";
 import { DeleteButton } from "../Delete/DeleteButton";
-import Search from "../Search/search";
 // import Image from "next/image";
 
+import Search from "../Search/search";
 
 
-const ServerTableOne = async ({
-  query,onDeleteLocation,
-}: { query: string, onDeleteLocation: (id: string) => Promise<void> }) => {
-  const location = await getLocationlist(query);
 
 
-  if (location) {
+const CandidateTable = async ({
+  query,onDeleteCandidate,
+}: { query: string, onDeleteCandidate: (id: string) => Promise<void> }) => {
+  const candidate = await getCandidatelist(query);
+
+
+  if (candidate) {
     return (
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="flex justify-between">
@@ -29,6 +31,7 @@ const ServerTableOne = async ({
           >
             Create
           </Link>
+     
         </div>
         <div className="flex flex-col">
           <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
@@ -65,7 +68,7 @@ const ServerTableOne = async ({
             </div>
           </div>
           <div>
-            {location.map((rs, index) => (
+            {candidate.map((rs, index) => (
               <div
                 className={`grid grid-cols-3 sm:grid-cols-6 `}
                 key={rs.id}
@@ -79,20 +82,20 @@ const ServerTableOne = async ({
                   </p>
                 </div>
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-black dark:text-white">{rs.email}</p>
+                  <p className="text-black dark:text-white">{rs.lastName}</p>
                 </div>
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
                   <p className="text-black dark:text-white">
-                    {rs.name}
+                    {rs.phone}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-meta-3"> {rs.name}</p>
+                  <p className="text-meta-3"> {rs.location.name}</p>
                 </div>
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
-                  {/* <p className="text-black dark:text-white">{rs.location[0].name}</p> */}
+                <p className="text-meta-3"> {rs.location.name}</p>{/* <p className="text-black dark:text-white">{rs.location[0].name}</p> */}
                 </div>
 
                 <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
@@ -102,7 +105,7 @@ const ServerTableOne = async ({
                       className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-2 text-white transition hover:bg-opacity-90"
                     >Edit
                     </Link>
-                    <DeleteButton id={rs.id} onClick={() => onDeleteLocation(rs.id)} />
+                    <DeleteButton id={rs.id} onClick={() => deleteCandidate(rs.id)} />
                   </div>
                 </div>
               </div>
@@ -115,4 +118,4 @@ const ServerTableOne = async ({
 
 };
 
-export default ServerTableOne;
+export default CandidateTable;

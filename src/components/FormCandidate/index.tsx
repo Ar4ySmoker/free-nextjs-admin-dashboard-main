@@ -16,13 +16,158 @@ import MultiSelect from "@/components/FormCandidate/MultiSelect";
 import Dropdown from "@/components/SelectGroup/RefactorProfessionPrimary";
 import { getProfessionlist } from "@/db/queries/professions";
 
+import { useFormState } from "react-dom"
+import { getLocationlist, saveLocation } from "@/db/queries/location";
+import { saveCandidate } from "@/db/queries/candidate";
+import Link from "next/link";
+import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
 
 
 const FormCandidate = () => {
+  const [locationState, locationFormAction] = useFormState(saveLocation, null);
+
+  const [candidateState, candidateFormAction] = useFormState(saveCandidate, null);
+
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  useEffect(() => {
+    async function fetchLocations() {
+      try {
+        const locationsData = await getLocationlist();
+        setLocations(locationsData);
+      } catch (error) {
+        console.error("Failed to fetch locations:", error);
+      }
+    }
+
+    fetchLocations();
+  }, []);
+
+  const handleLocationChange = (event) => {
+    setSelectedLocation(event.target.value);
+  };
   return (
     <>
       <Breadcrumb pageName="FormCandidate" />
+      <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-6.5 mb-3">
+        <form action={candidateFormAction}>
+        <div className="flex flex-col gap-9">
+          <div>
+            <label htmlFor="name" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Имя
+            </label>
+            <input
+              type="text"
+              placeholder="Ваше имя"
+              name="name"
+              id="name"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Фамилия
+            </label>
+            <input
+              type="text"
+              placeholder="Ваша фамилия"
+              id="lastname"
+              name="lastName"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          <div>
 
+            <DatePickerOne />
+          </div>
+          <div>
+            <label htmlFor="phoneNumber" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Номер телефона
+            </label>
+            <input
+              type="text"
+              placeholder="Номер телефона"
+              id="phoneNumber"
+              name="phoneNumber"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-9">
+          <div>
+            <label htmlFor="email" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Почта
+            </label>
+            <input
+              type="email"
+              placeholder="Почта"
+              id="email"
+              name="email"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          <div>
+            <label htmlFor="documents" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Документы
+            </label>
+            <input
+              type="text"
+              placeholder="Коментарий"
+              id="documents"
+              name="documents"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          <div>
+            <label htmlFor="profession" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Профессия
+            </label>
+            <input
+              type="text"
+              placeholder="Коментарий"
+              id="profession"
+              name="profession"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          <div>
+      <label htmlFor="location">Location:</label>
+      <select id="location" value={selectedLocation} onChange={handleLocationChange}>
+        <option value="">Select location...</option>
+        {locations.map((location) => (
+          <option key={location.id} value={location.id}>
+            {location.name}
+          </option>
+        ))}
+      </select>
+      {/* Другие поля формы */}
+    </div>
+          <div>
+            <label htmlFor="comment" className="mb-3 block text-sm font-medium text-black dark:text-white">
+              Коментарий
+            </label>
+            <input
+              type="text"
+              placeholder="Коментарий"
+              id="comment"
+              name="comment"
+              className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+        </div>
+        <div id="name-error" aria-live="polite" aria-atomic="true">
+                  <p className="mt-2 text-sm text-red-500">{candidateState?.Error?.name}</p>
+                </div>
+        <Button
+        type="submit"
+              className="inline-flex items-center justify-center bg-primary px-10 py-4 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
+            >
+              Сохранить
+            </Button>
+            </form>
+      </div>
       <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div className="flex flex-col gap-9">
           {/* <!-- Input Fields --> */}
@@ -78,6 +223,39 @@ const FormCandidate = () => {
                   type="email"
                   placeholder="Почта"
                   id="email"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Документы
+                </label>
+                <input
+                  type="text"
+                  placeholder="Коментарий"
+                  id="coment"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Профессия
+                </label>
+                <input
+                  type="text"
+                  placeholder="Коментарий"
+                  id="coment"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                />
+              </div>
+              <div>
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Коментарий
+                </label>
+                <input
+                  type="text"
+                  placeholder="Коментарий"
+                  id="coment"
                   className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                 />
               </div>
@@ -209,6 +387,30 @@ const FormCandidate = () => {
               <Dropdown title={"Test"} placeholder={"Test"} callback={getProfessionlist} />
               <MultiSelect id="multiSelect" />
             </div>
+          </div>
+          {/* Добавить Локацию*/}
+          <div>
+            <form action={locationFormAction}>
+              <div className="mb-5">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-900">
+                  Add Location
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  placeholder="Location..."
+                />
+                <div id="name-error" aria-live="polite" aria-atomic="true">
+                  <p className="mt-2 text-sm text-red-500">{locationState?.Error?.name}</p>
+                </div>
+              </div>
+
+
+              <button type="submit" className="btn btn-primary">Save</button>
+            </form>
+
           </div>
         </div>
       </div>

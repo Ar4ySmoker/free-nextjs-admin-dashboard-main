@@ -1,10 +1,14 @@
+
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import TableOne from "@/components/Tables/TableOne";
 import TableThree from "@/components/Tables/TableThree";
 import TableTwo from "@/components/Tables/TableTwo";
+import CandidateTable from "@/components/Tables/TableOneCandidate";
 
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+
+
 
 
 export const metadata: Metadata = {
@@ -16,10 +20,12 @@ export const metadata: Metadata = {
 const TablesPage = () => {
   return (
     <DefaultLayout>
+        
       <Breadcrumb pageName="Работники" />
 
       <div className="flex flex-col gap-10">
         <TableOne query="SELECT * FROM Location" />
+        <CandidateTable query="SELECT * FROM Candidate" />
         {/* <TableTwo query="SELECT * FROM Profession" /> */}
         <TableThree />
       </div>
